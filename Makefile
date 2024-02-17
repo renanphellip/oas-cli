@@ -11,7 +11,6 @@ dev:
 	@make format
 	@make lint
 	@make sec
-	@make test
 install:
 	@poetry install --no-interaction
 	@poetry shell
