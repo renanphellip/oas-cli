@@ -19,6 +19,7 @@ pytest-html = "^4.1.1"
 safety = "^3.0.1"
 blue = "^0.9.1"
 isort = "^5.13.2"
+pytest-mock = "^3.12.0"
 
 [build-system]
 requires = ["poetry-core"]

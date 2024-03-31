@@ -21,3 +21,12 @@ rules:
       function: "testing"
       functionOptions:
         myOption: "testing"
+  my-third-rule:
+    description: "def"
+    message: "{{error}}"
+    given: $.paths./store/orders.get.parameters[0].name
+    then:
+      function: "casing"
+      functionOptions:
+        type: "camel"
+        disallowDigits: true

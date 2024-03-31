@@ -5,8 +5,7 @@ from typing import List
 from jsonpath_ng import parse
 from rich import print
 
-from oas_cli.custom_function import (get_custom_functions,
-                                     validate_custom_functions)
+from oas_cli.function import get_functions, validate_functions
 from oas_cli.entities import ErrorMessage, ErrorMessageCollection
 from oas_cli.file import read_file
 from oas_cli.resolve import resolve
@@ -14,12 +13,16 @@ from oas_cli.ruleset import get_ruleset, validate_ruleset_integrity
 
 
 def get_jsonpath_results(jsonpath_pattern: str, data: object):
-    pattern = parse(jsonpath_pattern)
-    results = [
-        {'context': '$.' + str(match.full_path), 'target_value': match.value}
-        for match in pattern.find(data)
-    ]
-    return results
+    try:
+        pattern = parse(jsonpath_pattern)
+        results = [
+            {'context': '$.' + str(match.full_path), 'target_value': match.value}
+            for match in pattern.find(data)
+        ]
+        return results
+    except Exception as error:
+        print(f'[red]Failed to parse JSONPath "{jsonpath_pattern}": {error}[/red]')
+        sys.exit(1)
 
 
 def validate(
@@ -35,9 +38,18 @@ def validate(
 
         ruleset = get_ruleset(ruleset_path)
 
-        functions_directory = os.path.abspath('oas_cli/functions')
-        custom_functions = get_custom_functions(functions_directory)
-        validate_custom_functions(ruleset, custom_functions)
+        core_functions_dir = os.path.abspath('oas_cli/core_functions')
+        core_functions = get_functions(core_functions_dir)
+        
+        custom_functions_dir = os.path.abspath('oas_cli/custom_functions')
+        custom_functions = get_functions(custom_functions_dir)
+        
+        functions = core_functions
+        for key, value in custom_functions.items():
+            if key not in core_functions:
+                functions[key] = value
+        
+        validate_functions(ruleset, functions)
 
         error_messages: List[ErrorMessage] = []
 
@@ -54,10 +66,10 @@ def validate(
 
             function_name = rule.then.function
             function_options = rule.then.functionOptions
-            custom_function = custom_functions[function_name]
+            run_function = functions[function_name]
 
             for result in results:
-                messages: List[str] = custom_function(
+                messages: List[str] = run_function(
                     result.get('context'),
                     result.get('target_value'),
                     function_options,

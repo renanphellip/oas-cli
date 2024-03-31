@@ -37,7 +37,7 @@ def get_ruleset(ruleset_path: str) -> List[Rule]:
                 message=rule_def.get('message'),
                 documentation=rule_def.get('documentation', ''),
                 severity=rule_severity,
-                given=rule_def.get('given'),
+                _given=rule_def.get('given'),
                 then=RuleThen(rule_def.get('then')),
             )
         )

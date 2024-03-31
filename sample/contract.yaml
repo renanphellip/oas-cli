@@ -75,7 +75,7 @@ paths:
       description: For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
       operationId: getOrderById
       parameters:
-        - name: orderId
+        - name: OrderId
           in: path
           description: ID of order that needs to be fetched
           required: true

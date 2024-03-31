@@ -39,7 +39,13 @@ ruleset_schema = {
                                 'functionOptions': {
                                     'type': ['object'],
                                     'minProperties': 1,
-                                    'additionalProperties': {'type': 'string'},
+                                    'additionalProperties': {
+                                        'oneOf': [
+                                            {'type': 'string'},
+                                            {'type': 'number'},
+                                            {'type': 'boolean'},
+                                        ]
+                                    },
                                 },
                             },
                             'required': ['function'],

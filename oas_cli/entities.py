@@ -28,12 +28,18 @@ class Severity(str, Enum):
 class Rule:
     name: str
     description: str
-    message: Union[str | List[str]]
-    documentation: Union[str | List[str]]
+    message: Union[str, List[str]]
+    documentation: Union[str, List[str]]
     severity: Severity
-    given: Union[str | List[str]]
+    _given: Union[str, List[str]]
     then: RuleThen
 
+    @property
+    def given(self) -> Union[str, List[str]]:
+        if isinstance(self._given, str):
+            return '.'.join([f'"{path}"' if '/' in path and not path.startswith(('"', "'")) and not path.endswith(('"', "'")) else path for path in self._given.split('.')])
+        else:
+            return ['.'.join([f'"{path}"' if '/' in path and not path.startswith(('"', "'")) and not path.endswith(('"', "'")) else path for path in context.split('.')]) for context in self._given]
 
 @dataclass
 class ErrorMessage:

@@ -26,10 +26,10 @@
                 "validate",
                 "sample/contract.yaml",
                 "sample/ruleset.yaml",
-                "output/result.json",
+                "output/result.txt",
                 "--resolve-contract",
                 "--output-format",
-                "json",
+                "text",
             ]
         }
     ]
