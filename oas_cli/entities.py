@@ -5,15 +5,30 @@ from typing import List, Union
 
 @dataclass
 class RuleThen:
-    then: dict[str, str]
+    then: Union[List[dict[str, str]], dict[str, str]]
+
+    @property
+    def fields(self) -> List[dict[str, str]]:
+        fields = []
+        if isinstance(self.then, list):
+            for item in self.then:
+                fields.append({
+                    'field': item.get('field'),
+                    'function': item.get('function')
+                })
+        return fields
 
     @property
     def function(self) -> str:
-        return self.then.get('function')
+        if isinstance(self.then, dict):
+            return self.then.get('function')
+        return None
 
     @property
     def functionOptions(self) -> dict[str, str]:
-        return self.then.get('functionOptions')
+        if isinstance(self.then, dict):
+            return self.then.get('functionOptions')
+        return None
 
 
 class Severity(str, Enum):

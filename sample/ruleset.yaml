@@ -22,11 +22,9 @@ rules:
       functionOptions:
         myOption: "testing"
   my-third-rule:
-    description: "def"
+    description: "validate field"
     message: "{{error}}"
-    given: $.paths./store/orders.get.parameters[0].name
+    given: $.info
     then:
-      function: "casing"
-      functionOptions:
-        type: "camel"
-        disallowDigits: true
+      - field: "title"
+        function: truthy

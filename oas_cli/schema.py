@@ -33,22 +33,38 @@ ruleset_schema = {
                             ]
                         },
                         'then': {
-                            'type': 'object',
-                            'properties': {
-                                'function': {'type': 'string'},
-                                'functionOptions': {
-                                    'type': ['object'],
-                                    'minProperties': 1,
-                                    'additionalProperties': {
-                                        'oneOf': [
-                                            {'type': 'string'},
-                                            {'type': 'number'},
-                                            {'type': 'boolean'},
-                                        ]
+                            'oneOf': [
+                                {
+                                    'type': 'object',
+                                    'properties': {
+                                        'function': {'type': 'string'},
+                                        'functionOptions': {
+                                            'type': ['object'],
+                                            'minProperties': 1,
+                                            'additionalProperties': {
+                                                'oneOf': [
+                                                    {'type': 'string'},
+                                                    {'type': 'number'},
+                                                    {'type': 'boolean'},
+                                                ]
+                                            },
+                                        },
                                     },
+                                    'required': ['function'],
                                 },
-                            },
-                            'required': ['function'],
+                                {
+                                    'type': 'array',
+                                    'items': {
+                                        'type': 'object',
+                                        'minProperties': 1,
+                                        'properties': {
+                                            'field': {'type': 'string'},
+                                            'function': {'type': 'string'},
+                                        },
+                                        'required': ['field', 'function'],
+                                    }
+                                }
+                            ]
                         },
                     },
                     'required': ['description', 'message', 'given', 'then'],

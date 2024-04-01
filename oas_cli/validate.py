@@ -14,9 +14,12 @@ from oas_cli.ruleset import get_ruleset, validate_ruleset_integrity
 
 def get_jsonpath_results(jsonpath_pattern: str, data: object):
     try:
+        root_string = '$.'
+        if jsonpath_pattern == '$':
+            root_string = ''
         pattern = parse(jsonpath_pattern)
         results = [
-            {'context': '$.' + str(match.full_path), 'target_value': match.value}
+            {'context': root_string + str(match.full_path), 'target_value': match.value}
             for match in pattern.find(data)
         ]
         return results
@@ -64,43 +67,82 @@ def validate(
                 context = rule.given
                 results = get_jsonpath_results(context, contract_data)
 
+            fields = rule.then.fields
             function_name = rule.then.function
             function_options = rule.then.functionOptions
-            run_function = functions[function_name]
 
-            for result in results:
-                messages: List[str] = run_function(
-                    result.get('context'),
-                    result.get('target_value'),
-                    function_options,
-                )
-
-                if len(messages) > 0:
-                    errors: List[str] = []
-                    if '{{error}}' in rule.message:
-                        errors.extend(messages)
-                    else:
-                        if isinstance(rule.message, list):
-                            errors.extend(rule.message)
-                        else:
-                            errors.append(rule.message)
-
-                    docs: List[str] = []
-                    if len(rule.documentation) > 0:
-                        if isinstance(rule.documentation, list):
-                            docs.extend(rule.documentation)
-                        else:
-                            docs.append(rule.documentation)
-
-                    error_messages.append(
-                        ErrorMessage(
-                            rule=rule.name,
-                            context=result.get('context'),
-                            severity=rule.severity,
-                            messages=errors,
-                            documentations=docs,
+            if len(fields) > 0:
+                for field in fields:
+                    function_name = field.get('function')
+                    run_function = functions.get(function_name)
+                    for result in results:
+                        messages: List[str] = run_function(
+                            result.get('context'),
+                            result.get('target_value'),
+                            field.get('field')
                         )
+
+                        if len(messages) > 0:
+                            errors: List[str] = []
+                            if '{{error}}' in rule.message:
+                                errors.extend(messages)
+                            else:
+                                if isinstance(rule.message, list):
+                                    errors.extend(rule.message)
+                                else:
+                                    errors.append(rule.message)
+
+                            docs: List[str] = []
+                            if len(rule.documentation) > 0:
+                                if isinstance(rule.documentation, list):
+                                    docs.extend(rule.documentation)
+                                else:
+                                    docs.append(rule.documentation)
+
+                            error_messages.append(
+                                ErrorMessage(
+                                    rule=rule.name,
+                                    context=result.get('context'),
+                                    severity=rule.severity,
+                                    messages=errors,
+                                    documentations=docs,
+                                )
+                            )
+            else:
+                run_function = functions.get(function_name)
+                for result in results:
+                    messages: List[str] = run_function(
+                        result.get('context'),
+                        result.get('target_value'),
+                        function_options,
                     )
+
+                    if len(messages) > 0:
+                        errors: List[str] = []
+                        if '{{error}}' in rule.message:
+                            errors.extend(messages)
+                        else:
+                            if isinstance(rule.message, list):
+                                errors.extend(rule.message)
+                            else:
+                                errors.append(rule.message)
+
+                        docs: List[str] = []
+                        if len(rule.documentation) > 0:
+                            if isinstance(rule.documentation, list):
+                                docs.extend(rule.documentation)
+                            else:
+                                docs.append(rule.documentation)
+
+                        error_messages.append(
+                            ErrorMessage(
+                                rule=rule.name,
+                                context=result.get('context'),
+                                severity=rule.severity,
+                                messages=errors,
+                                documentations=docs,
+                            )
+                        )
 
         return ErrorMessageCollection(error_messages)
 

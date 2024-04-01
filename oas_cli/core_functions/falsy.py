@@ -2,9 +2,9 @@ from typing import Any, Dict, List
 
 
 def falsy(
-    context: str, target_value: Any, function_options: Dict[str, str]
+    context: str, target_value: Dict[str, Any], field_name: str
 ) -> List[str]:
     falsy_values = (False, '', 0, None)
-    if target_value not in falsy_values:
-        return [f'{context} deve ser: {falsy_values}']
+    if target_value.get(field_name) not in falsy_values:
+        return [f'{context}.{field_name} must be: {falsy_values}']
     return []

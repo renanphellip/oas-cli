@@ -129,9 +129,6 @@ def casing(
         'snake': is_snake_case(target_value, disallow_digits, separator_char, separator_allow_leading),
         'macro': is_macro_case(target_value, disallow_digits, separator_char, separator_allow_leading),
     }
-    if type not in types:
-        return [f'Os tipos suportados são: {[type for type in types.keys()]}']
-    else:
-        if types.get(type) is False:
-            return [f'{context} deve ser {type} case.']
+    if types.get(type) is False:
+        return [f'{context} must be {type} case.']
     return []

@@ -43,10 +43,20 @@ def validate_functions(
     ruleset: List[Rule], functions: Dict
 ) -> Literal[True]:
     for rule in ruleset:
-        function_name = rule.then.function
-        if function_name not in functions:
-            print(
-                f'[red]The function "{function_name}" was not found for rule "{rule.name}".[/red]'
-            )
-            sys.exit(1)
+        if len(rule.then.fields) > 0:
+            fields = rule.then.fields
+            for field in fields:
+                function_name = field.get('function')
+                if function_name not in functions:
+                    print(
+                        f'[red]The function "{function_name}" was not found for rule "{rule.name}".[/red]'
+                    )
+                    sys.exit(1)
+        else:
+            function_name = rule.then.function
+            if function_name not in functions:
+                print(
+                    f'[red]The function "{function_name}" was not found for rule "{rule.name}".[/red]'
+                )
+                sys.exit(1)
     return True
