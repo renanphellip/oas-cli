@@ -22,9 +22,11 @@ rules:
       functionOptions:
         myOption: "testing"
   my-third-rule:
-    description: "validate field"
+    description: "validate tags"
     message: "{{error}}"
-    given: $.info
+    given: $
     then:
-      - field: "title"
-        function: truthy
+      field: tags
+      function: alphabetical
+      functionOptions:
+        keyedBy: name

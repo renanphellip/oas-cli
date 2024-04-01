@@ -37,6 +37,7 @@ ruleset_schema = {
                                 {
                                     'type': 'object',
                                     'properties': {
+                                        'field': {'type': 'string'},
                                         'function': {'type': 'string'},
                                         'functionOptions': {
                                             'type': ['object'],
@@ -46,9 +47,20 @@ ruleset_schema = {
                                                     {'type': 'string'},
                                                     {'type': 'number'},
                                                     {'type': 'boolean'},
+                                                    {'type': 'object'},
+                                                    {
+                                                        'type': 'array',
+                                                        'items': {
+                                                            'anyOf': [
+                                                                {'type': 'string'},
+                                                                {'type': 'number'},
+                                                                {'type': 'boolean'},
+                                                            ]
+                                                        },
+                                                    },
                                                 ]
                                             },
-                                        },
+                                        }
                                     },
                                     'required': ['function'],
                                 },
@@ -62,8 +74,8 @@ ruleset_schema = {
                                             'function': {'type': 'string'},
                                         },
                                         'required': ['field', 'function'],
-                                    }
-                                }
+                                    },
+                                },
                             ]
                         },
                     },

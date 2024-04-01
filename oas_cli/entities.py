@@ -9,26 +9,30 @@ class RuleThen:
 
     @property
     def fields(self) -> List[dict[str, str]]:
-        fields = []
         if isinstance(self.then, list):
-            for item in self.then:
-                fields.append({
-                    'field': item.get('field'),
-                    'function': item.get('function')
-                })
-        return fields
+            return [
+                {'field': item.get('field'), 'function': item.get('function')}
+                for item in self.then
+            ]
+        return []
+
+    @property
+    def field(self) -> str:
+        if isinstance(self.then, dict):
+            return self.then.get('field', '')
+        return ''
 
     @property
     def function(self) -> str:
         if isinstance(self.then, dict):
-            return self.then.get('function')
-        return None
+            return self.then.get('function', '')
+        return ''
 
     @property
     def functionOptions(self) -> dict[str, str]:
         if isinstance(self.then, dict):
-            return self.then.get('functionOptions')
-        return None
+            return self.then.get('functionOptions', {})
+        return {}
 
 
 class Severity(str, Enum):
@@ -45,16 +49,36 @@ class Rule:
     description: str
     message: Union[str, List[str]]
     documentation: Union[str, List[str]]
-    severity: Severity
+    severity: str
     _given: Union[str, List[str]]
-    then: RuleThen
+    then: str
+
+    def __post_init__(self):
+        if isinstance(self._given, str):
+            self.__given = self.process_given(self._given)
+        else:
+            self.__given = [
+                self.process_given(context) for context in self._given
+            ]
+
+    def process_given(self, given_str: str) -> str:
+        paths = given_str.split('.')
+        processed_paths = []
+        for path in paths:
+            if (
+                '/' in path
+                and not path.startswith(('"', "'"))
+                and not path.endswith(('"', "'"))
+            ):
+                processed_paths.append(f'"{path}"')
+            else:
+                processed_paths.append(path)
+        return '.'.join(processed_paths)
 
     @property
     def given(self) -> Union[str, List[str]]:
-        if isinstance(self._given, str):
-            return '.'.join([f'"{path}"' if '/' in path and not path.startswith(('"', "'")) and not path.endswith(('"', "'")) else path for path in self._given.split('.')])
-        else:
-            return ['.'.join([f'"{path}"' if '/' in path and not path.startswith(('"', "'")) and not path.endswith(('"', "'")) else path for path in context.split('.')]) for context in self._given]
+        return self.__given
+
 
 @dataclass
 class ErrorMessage:
@@ -71,19 +95,19 @@ class ErrorMessageCollection:
 
     @property
     def total_errors(self) -> int:
-        total_errors = 0
-        for error in self.error_messages:
-            if error.severity == Severity.ERROR:
-                total_errors += 1
-        return total_errors
+        return sum(
+            1
+            for error in self.error_messages
+            if error.severity == Severity.ERROR
+        )
 
     @property
     def total_warnings(self) -> int:
-        total_warnings = 0
-        for error in self.error_messages:
-            if error.severity == Severity.WARN:
-                total_warnings += 1
-        return total_warnings
+        return sum(
+            1
+            for error in self.error_messages
+            if error.severity == Severity.WARN
+        )
 
 
 class OutputFormat(str, Enum):

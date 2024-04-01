@@ -5,9 +5,9 @@ from typing import List
 from jsonpath_ng import parse
 from rich import print
 
-from oas_cli.function import get_functions, validate_functions
 from oas_cli.entities import ErrorMessage, ErrorMessageCollection
 from oas_cli.file import read_file
+from oas_cli.function import get_functions, validate_functions
 from oas_cli.resolve import resolve
 from oas_cli.ruleset import get_ruleset, validate_ruleset_integrity
 
@@ -19,12 +19,17 @@ def get_jsonpath_results(jsonpath_pattern: str, data: object):
             root_string = ''
         pattern = parse(jsonpath_pattern)
         results = [
-            {'context': root_string + str(match.full_path), 'target_value': match.value}
+            {
+                'context': root_string + str(match.full_path),
+                'target_value': match.value,
+            }
             for match in pattern.find(data)
         ]
         return results
     except Exception as error:
-        print(f'[red]Failed to parse JSONPath "{jsonpath_pattern}": {error}[/red]')
+        print(
+            f'[red]Failed to parse JSONPath "{jsonpath_pattern}": {error}[/red]'
+        )
         sys.exit(1)
 
 
@@ -43,15 +48,15 @@ def validate(
 
         core_functions_dir = os.path.abspath('oas_cli/core_functions')
         core_functions = get_functions(core_functions_dir)
-        
+
         custom_functions_dir = os.path.abspath('oas_cli/custom_functions')
         custom_functions = get_functions(custom_functions_dir)
-        
+
         functions = core_functions
         for key, value in custom_functions.items():
             if key not in core_functions:
                 functions[key] = value
-        
+
         validate_functions(ruleset, functions)
 
         error_messages: List[ErrorMessage] = []
@@ -68,6 +73,7 @@ def validate(
                 results = get_jsonpath_results(context, contract_data)
 
             fields = rule.then.fields
+            field = rule.then.field
             function_name = rule.then.function
             function_options = rule.then.functionOptions
 
@@ -79,13 +85,16 @@ def validate(
                         messages: List[str] = run_function(
                             result.get('context'),
                             result.get('target_value'),
-                            field.get('field')
+                            function_options,
+                            field.get('field'),
                         )
 
                         if len(messages) > 0:
                             errors: List[str] = []
                             if '{{error}}' in rule.message:
                                 errors.extend(messages)
+                            elif '{{description}}' in rule.message:
+                                errors.append(rule.description)
                             else:
                                 if isinstance(rule.message, list):
                                     errors.extend(rule.message)
@@ -115,12 +124,15 @@ def validate(
                         result.get('context'),
                         result.get('target_value'),
                         function_options,
+                        field,
                     )
 
                     if len(messages) > 0:
                         errors: List[str] = []
                         if '{{error}}' in rule.message:
                             errors.extend(messages)
+                        elif '{{description}}' in rule.message:
+                            errors.append(rule.description)
                         else:
                             if isinstance(rule.message, list):
                                 errors.extend(rule.message)

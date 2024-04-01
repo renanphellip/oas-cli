@@ -5,8 +5,11 @@ from rich import print
 from typing_extensions import Annotated
 
 from oas_cli.entities import OutputFormat
-from oas_cli.file import (validate_file_extension, validate_file_path,
-                          write_file)
+from oas_cli.file import (
+    validate_file_extension,
+    validate_file_path,
+    write_file,
+)
 from oas_cli.logger import print_error_messages
 from oas_cli.resolve import resolve
 from oas_cli.validate import validate

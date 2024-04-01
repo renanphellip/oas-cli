@@ -1,5 +1,6 @@
 import pytest
-from oas_cli.resolve import resolve_external_references, resolve
+
+from oas_cli.resolve import resolve, resolve_external_references
 
 
 @pytest.fixture
@@ -11,9 +12,7 @@ def mock_read_file(mocker):
 def test_resolve_external_references_dict(mock_read_file):
     mock_read_file.return_value = {'key': '$ref', '$ref': 'external.json'}
     base_path = '/testing_directory'
-    data = {
-        '$ref': '#/components/schemas/testing'
-    }
+    data = {'$ref': '#/components/schemas/testing'}
     resolved_data = resolve_external_references(data, base_path)
     assert resolved_data == data
 
@@ -21,28 +20,36 @@ def test_resolve_external_references_dict(mock_read_file):
 def test_resolve_external_references_list(mock_read_file):
     mock_read_file.return_value = {'key': '$ref', '$ref': 'external.json'}
     base_path = '/testing_directory'
-    resolved_data = resolve_external_references([{'key': '$ref', '$ref': 'external.json'}], base_path)
+    resolved_data = resolve_external_references(
+        [{'key': '$ref', '$ref': 'external.json'}], base_path
+    )
     assert resolved_data == [{'key': {}, '$ref': 'external.json'}]
 
 
 def test_resolve_external_references_nested_dict(mock_read_file):
     mock_read_file.return_value = {'nested_key': {'$ref': 'external.json'}}
     base_path = '/testing_directory'
-    resolved_data = resolve_external_references({'nested_key': {'$ref': 'external.json'}}, base_path)
+    resolved_data = resolve_external_references(
+        {'nested_key': {'$ref': 'external.json'}}, base_path
+    )
     assert resolved_data == {'nested_key': {'$ref': 'external.json'}}
 
 
 def test_resolve_external_references_invalid_ref(mock_read_file):
     mock_read_file.return_value = None
     base_path = '/testing_directory'
-    resolved_data = resolve_external_references({'key': '$ref', '$ref': '#internal'}, base_path)
+    resolved_data = resolve_external_references(
+        {'key': '$ref', '$ref': '#internal'}, base_path
+    )
     assert resolved_data == {'key': '$ref', '$ref': '#internal'}
 
 
 def test_resolve_external_references_internal_ref(mock_read_file):
     mock_read_file.return_value = None
     base_path = '/testing_directory'
-    resolved_data = resolve_external_references({'key': '$ref', '$ref': '#internal'}, base_path)
+    resolved_data = resolve_external_references(
+        {'key': '$ref', '$ref': '#internal'}, base_path
+    )
     assert resolved_data == {'key': '$ref', '$ref': '#internal'}
 
 
@@ -59,4 +66,7 @@ def test_resolve_contract_failure(mock_read_file, capsys):
     with pytest.raises(SystemExit):
         resolve(contract_path)
     captured = capsys.readouterr()
-    assert '[red]Failed to resolve the contract: File not found[/red]\n' in captured.out
+    assert (
+        '[red]Failed to resolve the contract: File not found[/red]\n'
+        in captured.out
+    )

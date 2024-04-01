@@ -39,9 +39,7 @@ def get_functions(functions_path: str):
         sys.exit(1)
 
 
-def validate_functions(
-    ruleset: List[Rule], functions: Dict
-) -> Literal[True]:
+def validate_functions(ruleset: List[Rule], functions: Dict) -> Literal[True]:
     for rule in ruleset:
         if len(rule.then.fields) > 0:
             fields = rule.then.fields

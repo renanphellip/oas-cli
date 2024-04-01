@@ -7,7 +7,7 @@ from rich import print
 
 from oas_cli.entities import Rule, RuleThen, Severity
 from oas_cli.file import read_file
-from oas_cli.schema import ruleset_schema
+from oas_cli.ruleset_schema import ruleset_schema
 
 
 def validate_ruleset_integrity(ruleset_path: str) -> Literal[True]:
