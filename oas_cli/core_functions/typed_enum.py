@@ -20,7 +20,9 @@ def typedEnum(
         if opt_type in data_types:
             for item in opt_enum:
                 if not isinstance(item, data_types.get(opt_type)):
-                    messages.append(f'{item} must be of type {opt_type}.')
+                    messages.append(f'The enum value {item} must be of type {opt_type}.')
+            if not isinstance(target_value, data_types.get(opt_type)):
+                messages.append(f'The value {target_value} in {context} must be of type {opt_type}.')
         if target_value not in opt_enum:
             messages.append(f'{context} must be: {opt_enum}')
     return messages
