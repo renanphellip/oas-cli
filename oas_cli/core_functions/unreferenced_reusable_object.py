@@ -5,7 +5,7 @@ def ref_exists(data: Any, reusable_objects_location: str) -> bool:
     if isinstance(data, dict):
         for key, value in data.items():
             if key == '$ref' and isinstance(value, str):
-                if value.startswith(reusable_objects_location):
+                if value == reusable_objects_location:
                     return True
             if isinstance(value, dict):
                 if ref_exists(value, reusable_objects_location):
@@ -14,12 +14,19 @@ def ref_exists(data: Any, reusable_objects_location: str) -> bool:
                 for item in value:
                     if ref_exists(item, reusable_objects_location):
                         return True
+    if isinstance(data, list):
+        for item in data:
+            if ref_exists(item, reusable_objects_location):
+                return True
+    if isinstance(data, str):
+        if data == reusable_objects_location:
+            return True
     return False
 
 
 def unreferencedReusableObject(
     context: str = '',
-    target_value: Dict[str, Any] = {},
+    target_value: Any = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
 ) -> List[str]:

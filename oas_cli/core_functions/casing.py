@@ -166,15 +166,15 @@ def is_macro_case(
 
 def casing(
     context: str = '',
-    target_value: Dict[str, Any] = {},
+    target_value: str = '',
     function_options: Dict[str, str] = {},
     field_name: str = '',
 ) -> List[str]:
     disallow_digits = function_options.get('disallowDigits')
     separator_char = function_options.get('separator.char')
     separator_allow_leading = function_options.get('separator.allowLeading')
-    type = function_options.get('type')
-    types = {
+    casing_type = function_options.get('type')
+    casing_types = {
         'flat': is_flat_case(
             target_value,
             disallow_digits,
@@ -218,6 +218,6 @@ def casing(
             separator_allow_leading,
         ),
     }
-    if types.get(type) is False:
-        return [f'{context} must be {type} case.']
+    if casing_types.get(casing_type) is False:
+        return [f'{context} must be {casing_type} case.']
     return []

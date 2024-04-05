@@ -3,7 +3,7 @@ from oas_cli.core_functions.enumeration import enumeration
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         ('1', 0),
         ('2', 0),
@@ -13,10 +13,10 @@ from oas_cli.core_functions.enumeration import enumeration
         (1, 1),
     ],
 )
-def test_enumeration_with_strings(input, expected_errors):
+def test_enumeration_with_strings(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'values': [
@@ -32,11 +32,13 @@ def test_enumeration_with_strings(input, expected_errors):
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
+    assert len(errors) == expected_error_count
+    if len(errors) == 1:
+        assert errors[0] == f'{context}.{field_name} must be: {function_options['values']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (123, 0),
         (456, 0),
@@ -45,10 +47,10 @@ def test_enumeration_with_strings(input, expected_errors):
         ('123', 1),
     ],
 )
-def test_enumeration_with_numbers(input, expected_errors):
+def test_enumeration_with_numbers(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'values': [
@@ -64,11 +66,13 @@ def test_enumeration_with_numbers(input, expected_errors):
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
+    assert len(errors) == expected_error_count
+    if len(errors) == 1:
+        assert errors[0] == f'{context}.{field_name} must be: {function_options['values']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         ('123', 0),
         (456, 0),
@@ -79,10 +83,10 @@ def test_enumeration_with_numbers(input, expected_errors):
         (None, 1),
     ],
 )
-def test_enumeration_with_any_type(input, expected_errors):
+def test_enumeration_with_any_type(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'values': [
@@ -98,4 +102,6 @@ def test_enumeration_with_any_type(input, expected_errors):
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
+    assert len(errors) == expected_error_count
+    if len(errors) == 1:
+        assert errors[0] == f'{context}.{field_name} must be: {function_options['values']}'

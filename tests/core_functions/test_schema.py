@@ -3,7 +3,7 @@ from oas_cli.core_functions.schema import schema
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         ([1], 1),
         ([1, 2], 0),
@@ -12,10 +12,10 @@ from oas_cli.core_functions.schema import schema
         ([1, 2, 3, 4, 5], 1),
     ],
 )
-def test_schema_with_dialect_auto(input, expected_errors):
+def test_schema_with_dialect_auto(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -34,13 +34,13 @@ def test_schema_with_dialect_auto(input, expected_errors):
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] == f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] == f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (['a'], 1),
         (['a', 'b'], 0),
@@ -49,10 +49,10 @@ def test_schema_with_dialect_auto(input, expected_errors):
         (['a', 'b', 'c', 'd', 'e'], 1),
     ],
 )
-def test_schema_with_dialect_auto_and_return_all_errors(input, expected_errors):
+def test_schema_with_dialect_auto_and_return_all_errors(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -72,13 +72,13 @@ def test_schema_with_dialect_auto_and_return_all_errors(input, expected_errors):
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (['a'], 1),
         (['a', 'b'], 0),
@@ -87,10 +87,10 @@ def test_schema_with_dialect_auto_and_return_all_errors(input, expected_errors):
         (['a', 'b', 'c', 'd', 'e'], 1),
     ],
 )
-def test_schema_with_dialect_draft4_and_return_all_errors(input, expected_errors):
+def test_schema_with_dialect_draft4_and_return_all_errors(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -111,13 +111,13 @@ def test_schema_with_dialect_draft4_and_return_all_errors(input, expected_errors
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (['a'], 1),
         (['a', 'b'], 0),
@@ -126,10 +126,10 @@ def test_schema_with_dialect_draft4_and_return_all_errors(input, expected_errors
         (['a', 'b', 'c', 'd', 'e'], 1),
     ],
 )
-def test_schema_with_dialect_draft6_and_return_all_errors(input, expected_errors):
+def test_schema_with_dialect_draft6_and_return_all_errors(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -150,13 +150,13 @@ def test_schema_with_dialect_draft6_and_return_all_errors(input, expected_errors
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (['a'], 1),
         (['a', 'b'], 0),
@@ -165,10 +165,10 @@ def test_schema_with_dialect_draft6_and_return_all_errors(input, expected_errors
         (['a', 'b', 'c', 'd', 'e'], 1),
     ],
 )
-def test_schema_with_dialect_draft7_and_return_all_errors(input, expected_errors):
+def test_schema_with_dialect_draft7_and_return_all_errors(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -189,13 +189,13 @@ def test_schema_with_dialect_draft7_and_return_all_errors(input, expected_errors
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (['a'], 1),
         (['a', 'b'], 0),
@@ -204,10 +204,10 @@ def test_schema_with_dialect_draft7_and_return_all_errors(input, expected_errors
         (['a', 'b', 'c', 'd', 'e'], 1),
     ],
 )
-def test_schema_with_dialect_draft2019_09_and_return_all_errors(input, expected_errors):
+def test_schema_with_dialect_draft2019_09_and_return_all_errors(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -228,13 +228,13 @@ def test_schema_with_dialect_draft2019_09_and_return_all_errors(input, expected_
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         (['a'], 1),
         (['a', 'b'], 0),
@@ -243,10 +243,10 @@ def test_schema_with_dialect_draft2019_09_and_return_all_errors(input, expected_
         (['a', 'b', 'c', 'd', 'e'], 1),
     ],
 )
-def test_schema_with_dialect_draft2020_12_and_return_all_errors(input, expected_errors):
+def test_schema_with_dialect_draft2020_12_and_return_all_errors(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     function_options = {
         'schema': {
@@ -267,6 +267,6 @@ def test_schema_with_dialect_draft2020_12_and_return_all_errors(input, expected_
         function_options=function_options,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
-    if expected_errors > 0:
-        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options.get('schema')}'
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] != f'{context}.{field_name} does not meet the expected schema: {function_options['schema']}'

@@ -1,9 +1,9 @@
-from typing import Any, Dict, List
+from typing import Dict, List, Union
 
 
 def typedEnum(
     context: str = '',
-    target_value: Dict[str, Any] = {},
+    target_value: Union[str, int, float, bool] = '',
     function_options: Dict[str, str] = {},
     field_name: str = '',
 ) -> List[str]:

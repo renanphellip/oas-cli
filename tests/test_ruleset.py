@@ -36,7 +36,7 @@ def test_validate_ruleset_integrity_with_valid_ruleset(mock_read_file):
             },
         }
     }
-    assert validate_ruleset_integrity('mocked_path') == True
+    assert validate_ruleset_integrity('mocked_path') is True
 
 
 def test_validate_ruleset_integrity_with_valid_ruleset_and_multiple_properties_value(
@@ -63,7 +63,7 @@ def test_validate_ruleset_integrity_with_valid_ruleset_and_multiple_properties_v
             }
         }
     }
-    assert validate_ruleset_integrity('mocked_path') == True
+    assert validate_ruleset_integrity('mocked_path') is True
 
 
 def test_validate_ruleset_integrity_with_valid_ruleset_and_new_properties(
@@ -85,7 +85,7 @@ def test_validate_ruleset_integrity_with_valid_ruleset_and_new_properties(
             }
         }
     }
-    assert validate_ruleset_integrity('mocked_path') == True
+    assert validate_ruleset_integrity('mocked_path') is True
 
 
 def test_validate_ruleset_integrity_with_invalid_ruleset(mock_read_file):

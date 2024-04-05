@@ -3,7 +3,7 @@ from oas_cli.core_functions.defined import defined
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         ('testing', 0),
         ('', 0),
@@ -14,10 +14,10 @@ from oas_cli.core_functions.defined import defined
         (None, 1)
     ],
 )
-def test_defined(input, expected_errors):
+def test_defined(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     field_name = 'myProperty'
     errors = defined(
@@ -26,4 +26,6 @@ def test_defined(input, expected_errors):
         function_options=None,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
+    assert len(errors) == expected_error_count
+    if len(errors) == 1:
+        assert errors[0] == f'{context}.{field_name} must not be null.'

@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 
 def pattern(
     context: str = '',
-    target_value: Dict[str, Any] = {},
+    target_value: str = '',
     function_options: Dict[str, str] = {},
     field_name: str = '',
 ) -> List[str]:

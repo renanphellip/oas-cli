@@ -3,7 +3,7 @@ from oas_cli.core_functions.truthy import truthy
 
 
 @pytest.mark.parametrize(
-    'input, expected_errors',
+    'property_value, expected_error_count',
     [
         ('testing', 0),
         ('', 1),
@@ -14,10 +14,10 @@ from oas_cli.core_functions.truthy import truthy
         (None, 1)
     ],
 )
-def test_truthy(input, expected_errors):
+def test_truthy(property_value, expected_error_count):
     context = '$'
     target_value = {
-        'myProperty': input
+        'myProperty': property_value
     }
     field_name = 'myProperty'
     errors = truthy(
@@ -26,4 +26,6 @@ def test_truthy(input, expected_errors):
         function_options=None,
         field_name=field_name,
     )
-    assert len(errors) == expected_errors
+    assert len(errors) == expected_error_count
+    if expected_error_count == 1:
+        assert errors[0] == f'{context}.{field_name} must not be: empty string, 0, false, null'
