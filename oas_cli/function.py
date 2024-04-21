@@ -5,7 +5,7 @@ from typing import Dict, List, Literal
 
 from rich import print
 
-from oas_cli.entities import Rule
+from oas_cli.entities.custom import CustomRule
 
 
 def get_functions(functions_path: str):
@@ -39,8 +39,8 @@ def get_functions(functions_path: str):
         sys.exit(1)
 
 
-def validate_functions(ruleset: List[Rule], functions: Dict) -> Literal[True]:
-    for rule in ruleset:
+def validate_functions(rules: List[CustomRule], functions: Dict) -> Literal[True]:
+    for rule in rules:
         if len(rule.then.fields) > 0:
             fields = rule.then.fields
             for field in fields:

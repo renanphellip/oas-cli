@@ -1,68 +1,62 @@
-from dataclasses import dataclass
 from enum import Enum
-from typing import List, Union
+from typing import Any, Dict, List, Union
+
+from pydantic.dataclasses import dataclass
+
+from oas_cli.entities.rulesets import RuleThen, Severity
 
 
 @dataclass
-class RuleThen:
-    then: Union[List[dict[str, str]], dict[str, str]]
+class CustomRuleThen:
+    then: Union[RuleThen, List[RuleThen]]
 
     @property
     def fields(self) -> List[dict[str, str]]:
         if isinstance(self.then, list):
             return [
-                {'field': item.get('field'), 'function': item.get('function')}
+                {'field': item.field, 'function': item.function}
                 for item in self.then
             ]
         return []
 
     @property
     def field(self) -> str:
-        if isinstance(self.then, dict):
-            return self.then.get('field', '')
+        if isinstance(self.then, RuleThen):
+            return self.then.field
         return ''
 
     @property
     def function(self) -> str:
-        if isinstance(self.then, dict):
-            return self.then.get('function', '')
+        if isinstance(self.then, RuleThen):
+            return self.then.function
         return ''
 
     @property
-    def functionOptions(self) -> dict[str, str]:
-        if isinstance(self.then, dict):
-            return self.then.get('functionOptions', {})
+    def function_options(self) -> Dict[str, Any]:
+        if isinstance(self.then, RuleThen):
+            return self.then.functionOptions
         return {}
 
-
-class Severity(str, Enum):
-    ERROR = 'error'
-    WARN = 'warn'
-
-    def __str__(self):
-        return self.value
-
-
 @dataclass
-class Rule:
+class CustomRule:
     name: str
     description: str
     message: Union[str, List[str]]
     documentation: Union[str, List[str]]
-    severity: str
+    severity: Severity
     _given: Union[str, List[str]]
-    then: str
+    then: CustomRuleThen
 
     def __post_init__(self):
         if isinstance(self._given, str):
-            self.__given = self.process_given(self._given)
+            self.__given = self.__process_given(self._given)
         else:
             self.__given = [
-                self.process_given(context) for context in self._given
+                self.__process_given(context) for context in self._given
             ]
 
-    def process_given(self, given_str: str) -> str:
-        paths = given_str.split('.')
+    def __process_given(self, given_string: str) -> str:
+        paths = given_string.split('.')
         processed_paths = []
         for path in paths:
             if (
@@ -117,3 +111,8 @@ class OutputFormat(str, Enum):
 
     def __str__(self):
         return self.value
+
+@dataclass
+class JSONPathResult:
+    context: str
+    target_value: Any

@@ -1,5 +1,7 @@
 import pytest
-from oas_cli.core_functions.unreferenced_reusable_object import unreferencedReusableObject
+
+from oas_cli.core_functions.unreferenced_reusable_object import \
+    unreferencedReusableObject
 
 
 @pytest.mark.parametrize(

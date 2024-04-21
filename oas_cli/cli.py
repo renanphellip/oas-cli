@@ -4,15 +4,15 @@ import typer
 from rich import print
 from typing_extensions import Annotated
 
-from oas_cli.entities import OutputFormat
+from oas_cli.entities.custom import OutputFormat
 from oas_cli.file import (
     validate_file_extension,
     validate_file_path,
-    write_file,
+    write_file
 )
 from oas_cli.logger import print_error_messages
-from oas_cli.resolve import resolve
-from oas_cli.validate import validate
+from oas_cli.resolver import Resolver
+from oas_cli.validate import Validator
 
 cli = typer.Typer(help='OpenAPI Specification CLI', no_args_is_help=True)
 
@@ -35,7 +35,8 @@ def resolve_input(
     supported_extensions = ('.yml', '.yaml', '.json')
     validate_file_path(contract_path, supported_extensions)
     validate_file_extension(output_path, supported_extensions)
-    resolved_contract = resolve(contract_path)
+    resolver = Resolver()
+    resolved_contract = resolver.resolve(contract_path)
     absolute_output_path = write_file(output_path, resolved_contract)
     print(
         f'[green]Success to resolve the contract: {absolute_output_path}[/green]'
@@ -81,7 +82,8 @@ def validate_input(
     if results_path:
         results_supported_extensions = ('.json', '.txt')
         validate_file_extension(results_path, results_supported_extensions)
-    error_message_collection = validate(
+    validator = Validator()
+    error_message_collection = validator.validate(
         contract_path, ruleset_path, resolve_contract
     )
     if results_path:

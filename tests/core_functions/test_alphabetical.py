@@ -1,5 +1,7 @@
 import pytest
+
 from oas_cli.core_functions.alphabetical import alphabetical
+
 
 @pytest.mark.parametrize(
     'target_value, field_name, keyed_by, expected_error_count',

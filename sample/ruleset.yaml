@@ -1,26 +1,26 @@
 rules:
-  my-first-rule:
-    description: "abc"
-    message:
-      - abc
-      - def
-    given: "$.paths.*.*.responses"
-    severity: error
-    then:
-      function: "testing"
-      functionOptions:
-        myOption: "testing"
-  my-second-rule:
-    description: "def"
-    message: "{{error}}"
-    documentation:
-      - xpto
-      - xyz
-    given: "$.paths.*.*.responses"
-    then:
-      function: "testing"
-      functionOptions:
-        myOption: "testing"
+  # my-first-rule:
+  #   description: "abc"
+  #   message:
+  #     - abc
+  #     - def
+  #   given: "$.paths.*.*.responses"
+  #   severity: error
+  #   then:
+  #     function: "testing"
+  #     functionOptions:
+  #       myOption: "testing"
+  # my-second-rule:
+  #   description: "def"
+  #   message: "{{error}}"
+  #   documentation:
+  #     - xpto
+  #     - xyz
+  #   given: "$.paths.*.*.responses"
+  #   then:
+  #     function: "testing"
+  #     functionOptions:
+  #       myOption: "testing"
   my-third-rule:
     description: "validate tags"
     message: "{{error}}"

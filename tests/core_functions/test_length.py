@@ -1,4 +1,5 @@
 import pytest
+
 from oas_cli.core_functions.length import length
 
 

@@ -4,7 +4,8 @@ from typing import Literal
 from rich.console import Console
 from rich.markup import escape
 
-from oas_cli.entities import ErrorMessageCollection, OutputFormat, Severity
+from oas_cli.entities.custom import (ErrorMessageCollection, OutputFormat,
+                                     Severity)
 
 
 def print_error_messages(

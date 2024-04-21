@@ -1,16 +1,16 @@
 import pytest
 
-from oas_cli.entities import Severity
-from oas_cli.ruleset import get_ruleset, validate_ruleset_integrity
+from oas_cli.entities.rulesets import Severity
+from oas_cli.rulesets import get_rules
 
 
 @pytest.fixture
 def mock_read_file(mocker):
-    mock = mocker.patch('oas_cli.ruleset.read_file')
+    mock = mocker.patch('oas_cli.rulesets.read_file')
     return mock
 
 
-def test_validate_ruleset_integrity_with_valid_ruleset(mock_read_file):
+def test_get_rules_with_valid_rulesets(mock_read_file):
     mock_read_file.return_value = {
         'rules': {
             'first-rule': {
@@ -36,10 +36,13 @@ def test_validate_ruleset_integrity_with_valid_ruleset(mock_read_file):
             },
         }
     }
-    assert validate_ruleset_integrity('mocked_path') is True
+    try:
+        get_rules('mocked_path')
+    except SystemExit:
+        pytest.fail('The function raised SystemExit, but it should not have.')
 
 
-def test_validate_ruleset_integrity_with_valid_ruleset_and_multiple_properties_value(
+def test_get_rules_with_valid_rulesets_and_multiple_properties_value(
     mock_read_file,
 ):
     mock_read_file.return_value = {
@@ -63,10 +66,13 @@ def test_validate_ruleset_integrity_with_valid_ruleset_and_multiple_properties_v
             }
         }
     }
-    assert validate_ruleset_integrity('mocked_path') is True
+    try:
+        get_rules('mocked_path')
+    except SystemExit:
+        pytest.fail('The function raised SystemExit, but it should not have.')
 
 
-def test_validate_ruleset_integrity_with_valid_ruleset_and_new_properties(
+def test_get_rules_with_valid_rulesets_and_new_properties(
     mock_read_file,
 ):
     mock_read_file.return_value = {
@@ -85,16 +91,19 @@ def test_validate_ruleset_integrity_with_valid_ruleset_and_new_properties(
             }
         }
     }
-    assert validate_ruleset_integrity('mocked_path') is True
+    try:
+        get_rules('mocked_path')
+    except SystemExit:
+        pytest.fail('The function raised SystemExit, but it should not have.')
 
 
-def test_validate_ruleset_integrity_with_invalid_ruleset(mock_read_file):
+def test_get_rules_with_invalid_rulesets(mock_read_file):
     mock_read_file.return_value = {'invalid_data': {}}
     with pytest.raises(SystemExit):
-        validate_ruleset_integrity('mocked_path')
+        get_rules('mocked_path')
 
 
-def test_get_ruleset(mock_read_file):
+def test_get_rules(mock_read_file):
     mock_read_file.return_value = {
         'rules': {
             'first-rule': {
@@ -104,18 +113,19 @@ def test_get_ruleset(mock_read_file):
                 'given': '$.testing',
                 'severity': 'error',
                 'then': {
+                    'field': 'testing',
                     'function': 'testing',
                     'functionOptions': {'testing': 'testing'},
                 },
             }
         }
     }
-    ruleset = get_ruleset('mocked_path')
-    assert len(ruleset) == 1
-    assert ruleset[0].name == 'first-rule'
-    assert ruleset[0].description == 'testing'
-    assert ruleset[0].message == 'testing'
-    assert ruleset[0].severity == Severity.ERROR
-    assert ruleset[0].given == '$.testing'
-    assert ruleset[0].then.function == 'testing'
-    assert ruleset[0].then.functionOptions == {'testing': 'testing'}
+    rules = get_rules('mocked_path')
+    assert len(rules) == 1
+    assert rules[0].name == 'first-rule'
+    assert rules[0].description == 'testing'
+    assert rules[0].message == 'testing'
+    assert rules[0].severity == Severity.ERROR
+    assert rules[0].given == '$.testing'
+    assert rules[0].then.function == 'testing'
+    assert rules[0].then.function_options == {'testing': 'testing'}

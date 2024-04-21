@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 
-from jsonschema import validate, Draft4Validator, Draft6Validator, Draft7Validator, Draft201909Validator, Draft202012Validator
+from jsonschema import (Draft4Validator, Draft6Validator, Draft7Validator,
+                        Draft201909Validator, Draft202012Validator, validate)
 
 
 def schema(

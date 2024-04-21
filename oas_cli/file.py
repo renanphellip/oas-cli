@@ -6,7 +6,7 @@ from typing import Any, Dict
 import yaml
 from rich import print
 
-from oas_cli.entities import ErrorMessageCollection
+from oas_cli.entities.custom import ErrorMessageCollection
 
 
 def validate_file_extension(

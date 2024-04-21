@@ -1,5 +1,7 @@
 import pytest
+
 from oas_cli.core_functions.casing import casing
+
 
 @pytest.mark.parametrize(
     'target_value, casing_type, expected_error_count',

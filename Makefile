@@ -23,4 +23,4 @@ lint:
 sec:
 	@safety check
 test:
-	@pytest -v oas_cli tests --cov --cov-fail-under 90 --cov-report html
+	@pytest -v --cov ./oas_cli --cov-fail-under 90 --cov-report html
