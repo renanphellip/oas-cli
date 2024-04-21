@@ -5,6 +5,7 @@ from typing import Any, Dict
 
 import yaml
 from rich import print
+import tomli
 
 from oas_cli.entities.custom import ErrorMessageCollection
 
@@ -33,7 +34,10 @@ def validate_file_path(
 def read_file(file_path: str) -> Dict[str, Any]:
     try:
         absolute_file_path = os.path.abspath(file_path.strip())
-        if absolute_file_path.endswith('.json'):
+        if absolute_file_path.endswith('.toml'):
+            with open(absolute_file_path, 'rb') as file:
+                return tomli.load(file)
+        elif absolute_file_path.endswith('.json'):
             with open(absolute_file_path, 'r') as file:
                 return json.load(file)
         else:

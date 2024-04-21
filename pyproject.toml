@@ -12,6 +12,7 @@ pyyaml = "^6.0.1"
 jsonschema = "^4.21.1"
 jsonpath-ng = "^1.6.1"
 pydantic = "^2.6.4"
+tomli = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"
@@ -27,4 +28,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-oas = "oas_cli.__main__:cli"
+oas = "oas_cli.main:cli"

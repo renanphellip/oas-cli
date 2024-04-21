@@ -1,7 +1,6 @@
-from typing import Literal, Optional
+from typing import Optional
 
 import typer
-from rich import print
 from typing_extensions import Annotated
 
 from oas_cli.entities.custom import OutputFormat
@@ -11,40 +10,10 @@ from oas_cli.file import (
     write_file
 )
 from oas_cli.logger import print_error_messages
-from oas_cli.resolver import Resolver
 from oas_cli.validate import Validator
 
-cli = typer.Typer(help='OpenAPI Specification CLI', no_args_is_help=True)
 
-
-@cli.command('resolve')
-def resolve_input(
-    contract_path: Annotated[
-        str,
-        typer.Argument(
-            help='OpenAPI 3 document path. Supported extensions: .yml, .yaml, .json'
-        ),
-    ],
-    output_path: Annotated[
-        str,
-        typer.Argument(
-            help='Resolved OpenAPI 3 document path to be created. Supported extensions: .yml, .yaml, .json'
-        ),
-    ],
-) -> Literal[True]:
-    supported_extensions = ('.yml', '.yaml', '.json')
-    validate_file_path(contract_path, supported_extensions)
-    validate_file_extension(output_path, supported_extensions)
-    resolver = Resolver()
-    resolved_contract = resolver.resolve(contract_path)
-    absolute_output_path = write_file(output_path, resolved_contract)
-    print(
-        f'[green]Success to resolve the contract: {absolute_output_path}[/green]'
-    )
-
-
-@cli.command('validate')
-def validate_input(
+def validate(
     contract_path: Annotated[
         str,
         typer.Argument(
