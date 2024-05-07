@@ -8,7 +8,7 @@
             "name": "Debug Resolve",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/oas_cli/__main__.py",
+            "program": "${workspaceFolder}/oas_cli/main.py",
             "console": "integratedTerminal",
             "args": [
                 "resolve",
@@ -20,7 +20,7 @@
             "name": "Debug Validate",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/oas_cli/__main__.py",
+            "program": "${workspaceFolder}/oas_cli/main.py",
             "console": "integratedTerminal",
             "args": [
                 "validate",

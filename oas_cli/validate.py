@@ -20,17 +20,24 @@ class Validator:
 
     def __get_jsonpath_results(self, jsonpath_pattern: str, data: object) -> List[JSONPathResult]:
         try:
+            naming_filter = False
             root_string = '$.'
             if jsonpath_pattern == '$':
                 root_string = ''
+            if jsonpath_pattern.endswith('~'):
+                naming_filter = True
+                jsonpath_pattern = jsonpath_pattern[:-1]
             pattern = parse(jsonpath_pattern)
-            results = [
-                JSONPathResult(
+            results: List[JSONPathResult] = []
+            for match in pattern.find(data):
+                if naming_filter:
+                    target_value = str(match.path)
+                else:
+                    target_value = match.value
+                results.append(JSONPathResult(
                     context=root_string + str(match.full_path),
-                    target_value=match.value
-                )
-                for match in pattern.find(data)
-            ]
+                    target_value=target_value
+                ))
             return results
         except Exception as error:
             self.__console.print(
