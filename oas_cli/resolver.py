@@ -43,5 +43,5 @@ class Resolver:
             return resolved_contract_data
 
         except Exception as error:
-            self.__console.print(f'[red]Failed to resolve the contract: {escape(error)}[/red]')
+            self.__console.print(f'[red]Failed to resolve the contract: {escape(str(error))}[/red]')
             sys.exit(1)

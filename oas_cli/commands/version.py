@@ -13,6 +13,7 @@ def version() -> Literal[True]:
         data = read_file('pyproject.toml')
         version = data['tool']['poetry']['version']
         print(f'OAS CLI version: {version}')
+        return True
     except:
         print('[red]OAS CLI version was not specified.[/red]')
         sys.exit(1)

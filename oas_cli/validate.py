@@ -34,7 +34,7 @@ class Validator:
             return results
         except Exception as error:
             self.__console.print(
-                f'[red]Failed to parse JSONPath "{escape(jsonpath_pattern)}": {escape(error)}[/red]'
+                f'[red]Failed to parse JSONPath "{escape(jsonpath_pattern)}": {escape(str(error))}[/red]'
             )
             sys.exit(1)
 
@@ -133,5 +133,5 @@ class Validator:
             return ErrorMessageCollection(error_messages)
 
         except Exception as error:
-            self.__console.print(f'[red]Failed to validate the contract: {escape(error)}[/red]')
+            self.__console.print(f'[red]Failed to validate the contract: {escape(str(error))}[/red]')
             sys.exit(1)

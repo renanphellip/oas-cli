@@ -35,3 +35,4 @@ def resolve(
     print(
         f'[green]Success to resolve the contract: {absolute_output_path}[/green]'
     )
+    return True

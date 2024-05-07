@@ -59,3 +59,4 @@ def validate(
         write_file(results_path, error_message_collection)
     if output_format != OutputFormat.NONE:
         print_error_messages(output_format, error_message_collection)
+    return True
