@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, List
+from typing import Dict, List
 
 
 def is_flat_case(

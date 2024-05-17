@@ -52,8 +52,9 @@ def validate(
         results_supported_extensions = ('.json', '.txt')
         validate_file_extension(results_path, results_supported_extensions)
     validator = Validator()
+    custom_functions_path = 'oas_cli/custom_functions'
     error_message_collection = validator.validate(
-        contract_path, ruleset_path, resolve_contract
+        contract_path, ruleset_path, custom_functions_path, resolve_contract
     )
     if results_path:
         write_file(results_path, error_message_collection)
