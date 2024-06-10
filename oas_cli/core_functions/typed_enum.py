@@ -6,6 +6,7 @@ def typedEnum(
     target_value: Union[str, int, float, bool] = '',
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     opt_enum = function_options.get('enum')
     opt_type = function_options.get('type')

@@ -6,6 +6,7 @@ def xor(
     target_value: Dict[str, Any] = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     properties = function_options.get('properties')
     properties_found = sum(

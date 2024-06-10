@@ -16,13 +16,21 @@ from oas_cli.rulesets import get_rules
 
 
 class Validator:
-    def __init__(self):
+    def __init__(self, verbose=False):
+        self.verbose = verbose
         self.__console = Console(highlight=False)
 
     def __get_jsonpath_results(self, jsonpath_pattern: str, data: Dict[str, Any]) -> List[JSONPathResult]:
         try:
             root_string = '' if jsonpath_pattern == '$' else '$.'
+            if self.verbose:
+                self.__console.print(f'JSONPath pattern: [blue]{jsonpath_pattern}[/blue]')
+                if not root_string:
+                    self.__console.print(f'Identified root string.')
             naming_filter = jsonpath_pattern.endswith('~')
+            if self.verbose:
+                if naming_filter:
+                    self.__console.print(f'Identified naming filter.')
             jsonpath_pattern = jsonpath_pattern[:-1] if naming_filter else jsonpath_pattern
             pattern = parse(jsonpath_pattern)
             results = [
@@ -32,6 +40,8 @@ class Validator:
                 )
                 for match in pattern.find(data)
             ]
+            if self.verbose:
+                self.__console.print(f'[blue]{len(results)}[/blue] results were found.')
             return results
         except Exception as error:
             self.__console.print(
@@ -44,8 +54,12 @@ class Validator:
 
     def __create_error_messages(self, function_messages: List[str], rule: CustomRule, jsonpath_result: JSONPathResult) -> List[str]:
         if not rule.message or '{{error}}' in rule.message:
+            if self.verbose:
+                self.__console.print('The "[blue]' + rule.name +'[/blue]" rule has no defined messages or has "{{error}}" in the defined messages. The standard errors of the "[blue]' + rule.then.function + '[/blue]" function will be displayed.')
             errors = function_messages
         elif '{{description}}' in rule.message:
+            if self.verbose:
+                self.__console.print('The "[blue]' + rule.name +'[/blue]" rule has "{{description}}" in the defined messages, so this description will be displayed as errors.')
             errors = [rule.description]
         else:
             errors = rule.message if isinstance(rule.message, list) else [rule.message]
@@ -73,8 +87,10 @@ class Validator:
     
     def __run_function(self, rule: CustomRule, rule_function: Callable, jsonpath_results: List[JSONPathResult], field: str) -> List[ErrorMessage]:
         error_messages: List[ErrorMessage] = []
-        for result in jsonpath_results:
-            function_messages = rule_function(result.context, result.target_value, rule.then.function_options, field)
+        for i, result in enumerate(jsonpath_results):
+            if self.verbose:
+                self.__console.print(f'Running the "[blue]{rule.then.function}[/blue]" function for result number [blue]{i}[/blue]...')
+            function_messages = rule_function(result.context, result.target_value, rule.then.function_options, field, self.verbose)
             if function_messages:
                 errors = self.__create_error_messages(function_messages, rule, result)
                 error_messages.append(self.__create_error_message_instance(rule, result, errors))
@@ -82,15 +98,19 @@ class Validator:
 
     def __load_contract_data(self, contract_path: str, resolve_contract: bool) -> Dict[str, Any]:
         if resolve_contract:
-            resolver = Resolver()
+            resolver = Resolver(self.verbose)
             return resolver.resolve(contract_path)
         else:
-            return read_file(contract_path)
+            return read_file(contract_path, self.verbose)
 
     def __load_functions(self, custom_functions_path: str) -> Dict[str, Callable]:
         core_functions_dir = os.path.abspath('oas_cli/core_functions')
         custom_functions_dir = os.path.abspath(custom_functions_path)
+        if self.verbose:
+            self.__console.print('Loading core functions...')
         core_functions = get_functions(core_functions_dir)
+        if self.verbose:
+            self.__console.print('Loading custom functions...')
         custom_functions = get_functions(custom_functions_dir)
 
         functions = core_functions.copy()
@@ -130,7 +150,7 @@ class Validator:
         try:
             resolved_contract_data = self.__load_contract_data(contract_path, resolve_contract=True)
             raw_contract_data = self.__load_contract_data(contract_path, resolve_contract=False)
-            rules = get_rules(ruleset_path)
+            rules = get_rules(ruleset_path, self.verbose)
             functions = self.__load_functions(custom_functions_path)
 
             validate_functions(rules, functions)

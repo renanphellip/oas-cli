@@ -10,10 +10,10 @@ from oas_cli.entities.rulesets import Rulesets
 from oas_cli.file import read_file
 
 
-def get_rules(ruleset_path: str) -> List[CustomRule]:
+def get_rules(ruleset_path: str, verbose=False) -> List[CustomRule]:
     console = Console(highlight=False)
     try:
-        rulesets_data: Dict[str, Any] = read_file(ruleset_path)
+        rulesets_data: Dict[str, Any] = read_file(ruleset_path, verbose)
         rulesets = Rulesets.model_validate(rulesets_data)
         rules: List[CustomRule] = []
         for rule_name, rule in rulesets.rules.items():

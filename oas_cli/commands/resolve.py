@@ -25,13 +25,21 @@ def resolve(
             help='Resolved OpenAPI 3 document path to be created. Supported extensions: .yml, .yaml, .json'
         ),
     ],
+    verbose: Annotated[
+        bool,
+        typer.Option(
+            '--verbose',
+            '-v',
+            help='Verbose mode to display more logs.'
+        ),
+    ] = False,
 ) -> Literal[True]:
     supported_extensions = ('.yml', '.yaml', '.json')
-    validate_file_path(contract_path, supported_extensions)
-    validate_file_extension(output_path, supported_extensions)
-    resolver = Resolver()
+    validate_file_path(contract_path, supported_extensions, verbose)
+    validate_file_extension(output_path, supported_extensions, verbose)
+    resolver = Resolver(verbose)
     resolved_contract = resolver.resolve(contract_path)
-    absolute_output_path = write_file(output_path, resolved_contract)
+    absolute_output_path = write_file(output_path, resolved_contract, verbose)
     print(
         f'[green]Success to resolve the contract: {absolute_output_path}[/green]'
     )

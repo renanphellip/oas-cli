@@ -6,6 +6,7 @@ def enumeration(
     target_value: Dict[str, Any] = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     possible_values = function_options.get('values')
     field_target_value = target_value.get(field_name)

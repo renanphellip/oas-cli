@@ -169,6 +169,7 @@ def casing(
     target_value: str = '',
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     disallow_digits = function_options.get('disallowDigits')
     separator_char = function_options.get('separator.char')

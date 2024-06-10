@@ -9,7 +9,8 @@ from oas_cli.file import read_file
 
 
 class Resolver:
-    def __init__(self):
+    def __init__(self, verbose=False):
+        self.verbose = verbose
         self.__console = Console(highlight=False)
 
     def __resolve_external_references(self, data: object, base_path: str) -> Any:
@@ -20,8 +21,10 @@ class Resolver:
                     and isinstance(value, str)
                     and not value.startswith('#')
                 ):
+                    if self.verbose:
+                        self.__console.print(f'Resolving "[blue]{value}[/blue]"...')
                     file_path = f'{base_path}/{value}'
-                    file_content = read_file(file_path)
+                    file_content = read_file(file_path, self.verbose)
                     data = self.__resolve_external_references(file_content, base_path)
                 else:
                     data[key] = self.__resolve_external_references(value, base_path)
@@ -33,9 +36,12 @@ class Resolver:
 
     def resolve(self, contract_path: str) -> Dict[str, Any]:
         try:
-            contract_data = read_file(contract_path)
+            contract_data = read_file(contract_path, self.verbose)
 
             contract_base_path = Path(contract_path).parent
+            if self.verbose:
+                self.__console.print(f'The contract base path is: [blue]{contract_base_path}[/blue]')
+                self.__console.print(f'Resolving "[blue]{Path(contract_path).name}[/blue]"...')
 
             resolved_contract_data = self.__resolve_external_references(
                 contract_data, contract_base_path

@@ -29,6 +29,7 @@ def unreferencedReusableObject(
     target_value: Any = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     reusable_objects_location = function_options.get('reusableObjectsLocation')
     if not ref_exists(target_value, reusable_objects_location):

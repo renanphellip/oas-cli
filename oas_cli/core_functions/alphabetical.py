@@ -6,6 +6,7 @@ def alphabetical(
     target_value: Dict[str, Any] = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     field_target_value = target_value.get(field_name)
     keyed_by = function_options.get('keyedBy')

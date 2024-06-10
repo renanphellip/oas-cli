@@ -9,6 +9,7 @@ def schema(
     target_value: Dict[str, Any] = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     try:
         expected_schema = function_options.get('schema')

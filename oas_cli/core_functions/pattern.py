@@ -7,6 +7,7 @@ def pattern(
     target_value: str = '',
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     regex_match = function_options.get('match')
     regex_not_match = function_options.get('notMatch')

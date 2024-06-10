@@ -37,8 +37,8 @@ def test_resolve_external_references_dict(mocked_read_file, resolver):
             '$ref': '#/components/schemas/d'
         }
     }
-    mocked_read_file.assert_any_call('/base/path/a.yaml')
-    mocked_read_file.assert_any_call('/base/path/c.yaml')
+    mocked_read_file.assert_any_call('/base/path/a.yaml', resolver.verbose)
+    mocked_read_file.assert_any_call('/base/path/c.yaml', resolver.verbose)
     assert mocked_read_file.call_count == 2
 
 def test_resolve_external_references_list(mocked_read_file, resolver):
@@ -55,8 +55,8 @@ def test_resolve_external_references_list(mocked_read_file, resolver):
         {"a": "a"},
         {"b": "b"}
     ]
-    mocked_read_file.assert_any_call("/base/path/a.yaml")
-    mocked_read_file.assert_any_call("/base/path/b.yaml")
+    mocked_read_file.assert_any_call("/base/path/a.yaml", resolver.verbose)
+    mocked_read_file.assert_any_call("/base/path/b.yaml", resolver.verbose)
     assert mocked_read_file.call_count == 2
 
 def test_resolve(mocked_read_file, resolver):
@@ -65,7 +65,7 @@ def test_resolve(mocked_read_file, resolver):
     }
     resolved_data = resolver.resolve("/base/path/contract.yaml")
     assert resolved_data == {"key": "value"}
-    mocked_read_file.assert_called_once_with("/base/path/contract.yaml")
+    mocked_read_file.assert_called_once_with("/base/path/contract.yaml", resolver.verbose)
 
 def test_resolve_exception(mocked_read_file, resolver, capsys):
     mocked_read_file.side_effect = Exception("Error")

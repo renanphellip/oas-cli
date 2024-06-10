@@ -2,8 +2,9 @@ rules:
   my-rule:
     description: "Schemas references should not end with `.json`."
     given: "$.components.schemas.*.'$ref'"
-    resolved: true
+    resolved: false
     severity: error
+    documentation: https://www.google.com.br/
     then:
       function: pattern
       functionOptions:

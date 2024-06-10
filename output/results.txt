@@ -1,0 +1,10 @@
+ERROR
+Rule: my-rule
+Context: $.components.schemas.test.'$ref'
+Messages:
+- $.components.schemas.test.'$ref' must not match this regex: .+\.json$
+Documentations:
+- https://www.google.com.br/
+
+Total errors: 1
+Total warnings: 0

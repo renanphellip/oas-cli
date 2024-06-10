@@ -6,6 +6,7 @@ def length(
     target_value: Dict[str, Any] = {},
     function_options: Dict[str, str] = {},
     field_name: str = '',
+    verbose = False
 ) -> List[str]:
     max_length = function_options.get('max')
     min_length = function_options.get('min')
