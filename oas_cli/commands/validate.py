@@ -30,12 +30,6 @@ def validate(
             help='Validation results file path to be created. Supported extension: .json, .txt'
         ),
     ] = None,
-    resolve_contract: Annotated[
-        bool,
-        typer.Option(
-            help='Resolve external references from contract before validate.'
-        ),
-    ] = False,
     output_format: Annotated[
         OutputFormat,
         typer.Option(
@@ -54,7 +48,7 @@ def validate(
     validator = Validator()
     custom_functions_path = 'oas_cli/custom_functions'
     error_message_collection = validator.validate(
-        contract_path, ruleset_path, custom_functions_path, resolve_contract
+        contract_path, ruleset_path, custom_functions_path
     )
     if results_path:
         write_file(results_path, error_message_collection)

@@ -101,6 +101,14 @@ components:
   schemas:
     Order:
       $ref: 'Order.yaml'
+    order:
+      $ref: 'Order.yaml'
+    XPTO:
+      $ref: 'Order.yaml'
+    xpto:
+      $ref: 'Order.yaml'
+    test:
+      $ref: 'test.json'
   securitySchemes:
     petstore_auth:
       type: oauth2

@@ -126,9 +126,10 @@ class Validator:
             error_messages.extend(list_error_messages)
         return error_messages
 
-    def validate(self, contract_path: str, ruleset_path: str, custom_functions_path: str, resolve_contract: bool = False) -> ErrorMessageCollection:
+    def validate(self, contract_path: str, ruleset_path: str, custom_functions_path: str) -> ErrorMessageCollection:
         try:
-            contract_data = self.__load_contract_data(contract_path, resolve_contract)
+            resolved_contract_data = self.__load_contract_data(contract_path, resolve_contract=True)
+            raw_contract_data = self.__load_contract_data(contract_path, resolve_contract=False)
             rules = get_rules(ruleset_path)
             functions = self.__load_functions(custom_functions_path)
 
@@ -137,6 +138,7 @@ class Validator:
             error_messages = []
 
             for rule in rules:
+                contract_data = resolved_contract_data if rule.resolved else raw_contract_data
                 jsonpath_results = self.__get_jsonpath_results_from_rule(rule, contract_data)
                 error_messages.extend(self.__process_rule(rule, functions, jsonpath_results))
 

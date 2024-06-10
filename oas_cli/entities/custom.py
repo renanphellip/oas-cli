@@ -37,6 +37,7 @@ class CustomRuleThen:
             return self.then.functionOptions
         return {}
 
+
 @dataclass
 class CustomRule:
     name: str
@@ -44,6 +45,7 @@ class CustomRule:
     message: Union[str, List[str]]
     documentation: Union[str, List[str]]
     severity: Severity
+    resolved: bool
     _given: Union[str, List[str]]
     then: CustomRuleThen
 
@@ -111,6 +113,7 @@ class OutputFormat(str, Enum):
 
     def __str__(self):
         return self.value
+
 
 @dataclass
 class JSONPathResult:

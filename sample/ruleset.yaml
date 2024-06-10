@@ -1,8 +1,10 @@
 rules:
   my-rule:
-    message: "{{error}}"
-    given: $.components.schemas.*~
+    description: "Schemas references should not end with `.json`."
+    given: "$.components.schemas.*.'$ref'"
+    resolved: true
+    severity: error
     then:
-      function: casing
+      function: pattern
       functionOptions:
-        type: camel
+        notMatch: .+\.json$

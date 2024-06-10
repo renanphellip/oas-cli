@@ -26,8 +26,7 @@
                 "validate",
                 "sample/contract.yaml",
                 "sample/ruleset.yaml",
-                "output/result.txt",
-                "--resolve-contract",
+                "output/results.txt",
                 "--output-format",
                 "text",
             ]

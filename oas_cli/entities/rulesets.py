@@ -21,6 +21,7 @@ class Rule(BaseModel):
     message: Union[str, List[str]] = ''
     documentation: Union[str, List[str]] = ''
     severity: Severity = Severity.WARN
+    resolved: bool = True
     given: Union[str, List[str]]
     then: Union[RuleThen, List[RuleThen]]
 

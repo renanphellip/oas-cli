@@ -24,6 +24,7 @@ def get_rules(ruleset_path: str) -> List[CustomRule]:
                     message=rule.message,
                     documentation=rule.documentation,
                     severity=rule.severity,
+                    resolved=rule.resolved,
                     _given=rule.given,
                     then=CustomRuleThen(rule.then)
                 )
